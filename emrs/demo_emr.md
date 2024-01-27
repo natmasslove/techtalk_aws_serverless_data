@@ -1,8 +1,8 @@
 
 
-## EMR Serverless
+# EMR Serverless
 
-1. Run EMR Serverless Job
+## Running EMR Serverless Job
  - Browse to EMR Studio
  - Browse to Application (app id - in cloudformation output)
  - Submit Job Run:
