@@ -1,0 +1,19 @@
+Resources:
+  # S3 bucket for EMR scripts, Glue Job Scripts, sample data and outputs
+  TechTalkS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: s3-techtalk-aws-serverless-data
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+
+Outputs:
+  TechTalkS3Bucket:
+    Description: S3 Bucket for EMR scripts, Glue Job Scripts, sample data and outputs
+    Value: !Ref TechTalkS3Bucket
+    Export:
+      Name: TechTalkS3Bucket
