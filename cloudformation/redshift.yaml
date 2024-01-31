@@ -1,0 +1,22 @@
+
+
+Resources:
+  RedshiftServerlessNamespace:
+    Type: 'AWS::RedshiftServerless::Namespace'
+    Properties:
+      NamespaceName: rsns-techtalk-aws-serverless
+      AdminUsername: adminuser 
+      AdminUserPassword: 'ChangeMe123!' 
+      DbName: rstechtalkdb
+      #DefaultIamRoleArn: 'arn:aws:iam::123456789012:role/myRedshiftRole' # Specify your IAM role ARN
+      #KmsKeyId: 'arn:aws:kms:us-east-1:123456789012:key/your-kms-key-id' # Specify your KMS key ID for encryption
+      
+
+  RedshiftServerlessWorkgroup:
+    Type: 'AWS::RedshiftServerless::Workgroup'
+    Properties:
+      WorkgroupName: rswg-techtalk-aws-serverless
+      NamespaceName: !Ref RedshiftServerlessNamespace
+      BaseCapacity: 8 
+      # EnhancedVpcRouting: false
+      PubliclyAccessible: true      

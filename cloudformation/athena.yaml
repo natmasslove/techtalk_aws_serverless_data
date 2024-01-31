@@ -1,0 +1,103 @@
+Parameters:
+  S3BucketName:
+    Type: String
+    Default: s3-techtalk-aws-serverless-data
+    
+
+
+Resources:
+#athena workgroup
+  AthenaWorkgroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: athenawg-techtalk
+      Description: techtalk workgroup for athena
+      State: ENABLED
+      RecursiveDeleteOption: true
+      WorkGroupConfiguration:
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: true
+        ResultConfiguration:
+          OutputLocation: !Sub "s3://${S3BucketName}/query_results/"
+
+  ###### AWS Glue
+  AthenaSparkIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: role-techtalk-athena-spark
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - athena.amazonaws.com
+            Action:
+              - sts:AssumeRole              
+      Policies:
+        - PolicyName: athena-spark-s3-policy
+          PolicyDocument:
+            Statement: # Permissions are less granular for demonstration purposes
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:ListBucket
+                  - s3:DeleteObject
+                  - s3:GetObject
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - athena:GetWorkGroup
+                  - athena:TerminateSession
+                  - athena:GetSession
+                  - athena:GetSessionStatus
+                  - athena:ListSessions
+                  - athena:StartCalculationExecution
+                  - athena:GetCalculationExecutionCode
+                  - athena:StopCalculationExecution
+                  - athena:ListCalculationExecutions
+                  - athena:GetCalculationExecution
+                  - athena:GetCalculationExecutionStatus
+                  - athena:ListExecutors
+                  - athena:ExportNotebook
+                  - athena:UpdateNotebook
+                Resource: !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/athenawg-techtalk-spark'
+              # - Effect: Allow
+              #   Action:
+              #     - logs:CreateLogStream
+              #     - logs:DescribeLogStreams
+              #     - logs:CreateLogGroup
+              #     - logs:PutLogEvents
+              #   Resource:
+              #     - arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-athena:*
+              #     - arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-athena*:log-stream:*
+              # - Effect: Allow
+              #   Action: logs:DescribeLogGroups
+              #   Resource: arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*
+              - Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    cloudwatch:namespace: AmazonAthenaForApacheSpark
+
+      # ManagedPolicyArns:
+      #   - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      #   - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+
+  AthenaWorkgroupSpark:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: athenawg-techtalk-spark
+      Description: techtalk workgroup for athena
+      State: ENABLED
+      RecursiveDeleteOption: true
+      WorkGroupConfiguration:
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: true
+        EngineVersion: 
+          SelectedEngineVersion: "PySpark engine version 3"
+        ExecutionRole: !GetAtt AthenaSparkIAMRole.Arn
+        ResultConfiguration:
+          OutputLocation: !Sub "s3://${S3BucketName}/query_results_spark/"

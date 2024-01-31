@@ -11,6 +11,7 @@ Create required resources: [prepare.md](prepare.md)
 ## Demos:
 
 * [EMR Serverless](emrs/demo_emr.md)
+* [Athena](emrs/demo_athena.md)
 
 
 ## Teardown resources:

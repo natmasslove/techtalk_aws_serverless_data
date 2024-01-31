@@ -1,0 +1,156 @@
+Parameters:
+  S3BucketName:
+    Type: String
+    Default: s3-techtalk-aws-serverless-data
+    
+Resources:
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties: 
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput: 
+        Name: db-techtalk
+
+  GlueTable:
+    Type: AWS::Glue::Table
+    Properties: 
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput: 
+        Name: techtalk-nyc-taxi-csv
+        Description: "NYC dataset"
+        Parameters: 
+          classification: "csv"
+        StorageDescriptor: 
+          Columns: 
+            - Name: "VendorID"
+              Type: "string"
+            - Name: "tpep_pickup_datetime"
+              Type: "string"
+            - Name: "tpep_dropoff_datetime"
+              Type: "string"
+            - Name: "passenger_count"
+              Type: "string"
+            - Name: "trip_distance"
+              Type: "string"
+            - Name: "RatecodeID"
+              Type: "string"                            
+            - Name: "store_and_fwd_flag"
+              Type: "string"
+            - Name: "PULocationID"
+              Type: "string"
+            - Name: "DOLocationID"
+              Type: "string"
+            - Name: "payment_type"
+              Type: "string"
+            - Name: "fare_amount"
+              Type: "string"
+          InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
+          Location: !Sub "s3://${S3BucketName}/nyc_rides_2022_csv/"
+          OutputFormat: "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+          SerdeInfo: 
+            Parameters: 
+              field.delim: ","
+              skip.header.line.count: "1"
+            SerializationLibrary: "org.apache.hadoop.hive.serde2.OpenCSVSerde"
+        TableType: "EXTERNAL_TABLE"
+
+
+#   ###### AWS Glue
+#   GlueIAMRole:
+#     Type: AWS::IAM::Role
+#     Properties:
+#       RoleName: role-techtalk-glue-sample
+#       AssumeRolePolicyDocument:
+#         Version: 2012-10-17
+#         Statement:
+#           - Effect: Allow
+#             Principal:
+#               Service:
+#                 - glue.amazonaws.com
+#             Action:
+#               - sts:AssumeRole
+#       Path: /
+#       ManagedPolicyArns:
+#         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+#         - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+
+#   SampleGlueJob:
+#     Type: AWS::Glue::Job
+#     Properties:
+#       Name: gluej-runner-2-workers
+#       GlueVersion: 4.0
+#       Description: "Sample Glue Job for Glue Runner Test"
+#       Role: !GetAtt GlueIAMRole.Arn
+#       Command:
+#         Name: glueetl
+#         PythonVersion: 3
+#         ScriptLocation: !Sub "s3://${EMRServerlessS3Bucket}/glue_scripts/sample_2_workers.py"
+#       DefaultArguments:
+#         "--enable-metrics": "true" 
+#         "--enable-job-insights": "true"
+#         "--enable-observability-metrics" : "true"
+#         "--enable-spark-ui": "true"
+#         "--spark-event-logs-path": !Sub "s3://${EMRServerlessS3Bucket}/glue-spark-event-logs/"        
+#       #   "--enable-auto-scaling": "true" # when we use auto-scaling - 1 
+#       # MaxCapacity: 2 # when we use auto-scaling - 2
+#       NumberOfWorkers: 2  # when we DON't use auto-scaling - 1
+#       WorkerType: G.1X # when we DON't use auto-scaling - 2            
+
+#   SampleGlueJob6workers:
+#     Type: AWS::Glue::Job
+#     Properties:
+#       Name: gluej-runner-6-workers
+#       GlueVersion: 4.0
+#       Description: "Sample Glue Job for Glue Runner Test"
+#       Role: !GetAtt GlueIAMRole.Arn
+#       Command:
+#         Name: glueetl
+#         PythonVersion: 3
+#         ScriptLocation: !Sub "s3://${EMRServerlessS3Bucket}/glue_scripts/sample_6_workers.py"
+#       DefaultArguments:
+#         "--enable-metrics": "true" 
+#         "--enable-job-insights": "true"
+#         "--enable-observability-metrics" : "true"
+#         "--enable-spark-ui": "true"
+#         "--spark-event-logs-path": !Sub "s3://${EMRServerlessS3Bucket}/glue-spark-event-logs/"        
+#       #   "--enable-auto-scaling": "true" # when we use auto-scaling - 1 
+#       # MaxCapacity: 2 # when we use auto-scaling - 2
+#       NumberOfWorkers: 6  # when we DON't use auto-scaling - 1
+#       WorkerType: G.1X # when we DON't use auto-scaling - 2          
+
+#   SampleGlueJobAutoScale:
+#     Type: AWS::Glue::Job
+#     Properties:
+#       Name: gluej-runner-auto-scale
+#       GlueVersion: 4.0
+#       Description: "Sample Glue Job for Glue Runner Test"
+#       Role: !GetAtt GlueIAMRole.Arn
+#       Command:
+#         Name: glueetl
+#         PythonVersion: 3
+#         ScriptLocation: !Sub "s3://${EMRServerlessS3Bucket}/glue_scripts/sample_auto_scale.py"
+#       DefaultArguments:
+#         "--enable-metrics": "true" 
+#         "--enable-job-insights": "true"
+#         "--enable-observability-metrics" : "true"
+#         "--enable-spark-ui": "true"
+#         "--spark-event-logs-path": !Sub "s3://${EMRServerlessS3Bucket}/glue-spark-event-logs/"        
+#         "--enable-auto-scaling": "true" 
+#       MaxCapacity: 10   
+
+# Outputs:
+#   EMRServerlessApplicationId:
+#     Value: !Ref EMRServerlessApplication
+#     Export:
+#       Name: EMRServerlessApplicationId
+
+#   EMRServerlessRoleArn:
+#     Value: !GetAtt EMRServerlessRole.Arn
+#     Export:
+#       Name: EMRServerlessRoleArn      
+
+#   BenchmarkTestS3Bucket:
+#     Value: !Ref EMRServerlessS3Bucket
+#     Export:
+#       Name: BenchmarkTestS3Bucket      
