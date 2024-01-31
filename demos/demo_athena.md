@@ -16,6 +16,27 @@ SELECT trip_month, count(*)
  GROUP BY  trip_month 
  ORDER BY  trip_month; 
 ```
+
+## Using Result Cache
+
+- Switch on "Reuse query results"
+- Run the same query + Collect "Data Scanned Info"
+- Show where Workgroup stores query results
+
+## Using other Data Sources (Federated Queries)
+
+(here we need Timestream and Redshift sources pre-installed)
+- Browse to AWS Athena -> Query Editor
+- Choose proper DB
+- Run SQL 
+```sql
+select monitored_environment, resource_name, sum(execution) as executions_count, sum(dpu_seconds) as dpu_consumed
+  from "timestream-salmon-metrics-events-storage-devam"."tstable-glue_jobs-metrics"
+ group by monitored_environment, resource_name
+ order by monitored_environment, resource_name 
+```
+
+
 ## Running Spark Code
 
 - Browse to AWS Athena -> Notebook Editor
