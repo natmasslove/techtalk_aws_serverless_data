@@ -38,6 +38,11 @@ INSERT INTO rstable1 (id) VALUES (5);
 aws cloudformation deploy --stack-name cf-techtalk-aws-serverless-glue --template-file cloudformation/glue.yaml --capabilities CAPABILITY_NAMED_IAM
 ```
 
+2. copy Glue script into S3
+```
+aws s3 cp source/glue/csv_to_parquet.py s3://s3-techtalk-aws-serverless-data/source/glue/
+```
+
 ## EMR Serverless
 
 1. Deploy all resources:
