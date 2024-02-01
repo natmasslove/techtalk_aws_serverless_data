@@ -20,9 +20,16 @@
   - Show previous execution
 
 ## Glue Interactive Sessions (Jupyter Notebooks)
- 
-  - Show how it runs in Glue Job AWS UI
+
+### Locally
   - Show how to run it Visual Studio
     - it opens in c:\_Garb\glue_interactive_sessions
-    - load notebook techtalk.ipynb
+    - load notebook tech_talk_demo_local.ipynb
+
+ 
+### Inside the Glue Job AWS UI 
+  - Service: Glue -> Jobs -> Notebook
+  - load the same + role "role-techtalk-glue-notebook"
+  - Show how it runs in Glue Job AWS UI
+  - Auto conversion to your glue job
 
