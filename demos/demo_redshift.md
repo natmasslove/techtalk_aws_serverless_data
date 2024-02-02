@@ -26,6 +26,9 @@ SELECT * FROM rstable1
 
 - facepalm: they are SQL only
 - for Data Analysts, I guess
+```sql
+select table_schema, count(*) from svv_tables group by table_schema order by table_schema
+```
 
 ## Cloudwatch
 
