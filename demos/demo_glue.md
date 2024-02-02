@@ -4,6 +4,7 @@
 
 ## Running Glue Job
  - Browse to Glue -> Jobs -> job_name: gluej-techtalk-sample
+ - Code -> almost the same as for EMR
  - Trigger the job, and while it's running
  - Explain parameters:
    - enable-metrics, enable-spark-ui, enable-observability-metrics

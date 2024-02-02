@@ -2,6 +2,10 @@
 
 # EMR Serverless
 
+## About NYC Taxi Ride data set
+ - Show in AWS Data Exchange -> Marketplace -> Product catalog -> Taxi
+ - 40 Mln rows, 12 files - for each month
+
 ## Running EMR Serverless Job
  - Browse to EMR Studio
  - Browse to Application (app id - in cloudformation output)
@@ -13,16 +17,20 @@
    - Application logs -> upload to s3
      - s3://s3-techtalk-aws-serverless-data/logs
 
-Additional arguments can be used when needed:            
+Additional arguments (Job configuration) can be used when needed:            
 ```json
+{
         "sparkSubmitParameters": {
             "spark.hadoop.hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory",
-            "spark.executor.instances" : "2",
+            "spark.executor.instances" : "6",
             "spark.dynamicAllocation.enabled" : "false",
             "spark.executor.cores" : "4",
             "spark.executor.memory" : "16G"
         }
-```            
+}        
+```          
+
+ - Show pySpark script
 
 2. Note state transition and logs (while Job is running):
 

@@ -6,6 +6,7 @@
 
 - Browse to AWS Athena -> Query Editor
 - Choose Workgroup: athenawg-techtalk
+- Show SQL + explain how table was created + alternatives (CREATE TABLE / Crawler / CloudFormation)
 - Run SQL + Collect "Data Scanned Info"
 ```sql
 SELECT trip_month, count(*) 
@@ -22,6 +23,7 @@ SELECT trip_month, count(*)
 - Switch on "Reuse query results"
 - Run the same query + Collect "Data Scanned Info"
 - Show where Workgroup stores query results
+- Applicable in Merck setup
 
 ## Using other Data Sources (Federated Queries)
 
@@ -35,10 +37,17 @@ select monitored_environment, resource_name, sum(execution) as executions_count,
  group by monitored_environment, resource_name
  order by monitored_environment, resource_name 
 ```
+- Choose redshift
+- Run SQL
+```sql
+select * from pg_catalog.svv_tables
+```
 
 
 ## Running Spark Code
 
+- Browse to AWS Athena -> WORKGROUPS
+- Show workgroup settings
 - Browse to AWS Athena -> Notebook Editor
 - Choose Workgroup: athenawg-techtalk-spark
 - Create Notebook **showing Options**
